@@ -43,7 +43,7 @@ Page({
       });
     } catch (error) {
       this.setData({ isLoading: false });
-      wx.showToast({ title: "结果加载失败", icon: "none" });
+      wx.showToast({ title: getErrorMessage(error), icon: "none", duration: 3000 });
     }
   },
 
@@ -112,7 +112,7 @@ Page({
       this.setData({ playingVariantType: variantType });
       this.submitFeedback("play", variantType);
     } catch (error) {
-      wx.showToast({ title: "语音生成失败", icon: "none" });
+      wx.showToast({ title: getErrorMessage(error), icon: "none", duration: 3000 });
     } finally {
       if (this.data.ttsLoadingVariantType === variantType) {
         this.setData({ ttsLoadingVariantType: "" });
@@ -153,7 +153,7 @@ Page({
       this.submitFeedback(nextFavorite ? "favorite" : "unfavorite", null);
       wx.showToast({ title: nextFavorite ? "已收藏" : "已取消", icon: "success" });
     } catch (error) {
-      wx.showToast({ title: "操作失败", icon: "none" });
+      wx.showToast({ title: getErrorMessage(error), icon: "none" });
     }
   },
 
@@ -174,3 +174,13 @@ Page({
     }
   }
 });
+
+function getErrorMessage(error) {
+  if (!error) return "请求失败，请稍后重试";
+  if (error.type === "timeout") return "请求超时，请稍后重试";
+  if (error.type === "network") return "网络不给力，请检查网络设置";
+  if (error.type === "server") return "服务开小差了，请稍后重试";
+  if (error.type === "auth") return "登录已过期，请重新打开小程序";
+  if (error.message) return error.message;
+  return "请求失败，请稍后重试";
+}

@@ -12,7 +12,7 @@ public interface CommunicationStore {
 
     OptimizeResponse saveGenerated(Long userId, String originalText, AnalysisDto analysis, List<VariantDto> variants);
 
-    List<HistoryItemDto> listHistory(Long userId);
+    List<HistoryItemDto> listHistory(Long userId, int page, int limit);
 
     CommunicationDetailDto getDetail(Long userId, Long recordId);
 

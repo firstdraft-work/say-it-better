@@ -1,7 +1,7 @@
 package com.example.communicationoptimizer.service;
 
-import com.example.communicationoptimizer.dto.HistoryItemDto;
 import com.example.communicationoptimizer.dto.CommunicationDetailDto;
+import com.example.communicationoptimizer.dto.HistoryPageDto;
 import com.example.communicationoptimizer.dto.OptimizeRequest;
 import com.example.communicationoptimizer.dto.OptimizeResponse;
 import com.example.communicationoptimizer.dto.TtsResponse;
@@ -12,7 +12,7 @@ public interface CommunicationService {
 
     OptimizeResponse optimize(Long userId, OptimizeRequest request);
 
-    List<HistoryItemDto> listHistory(Long userId);
+    HistoryPageDto listHistory(Long userId, int page, int limit);
 
     CommunicationDetailDto getDetail(Long userId, Long recordId);
 

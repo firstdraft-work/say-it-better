@@ -1,11 +1,13 @@
 package com.example.communicationoptimizer.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class OptimizeRequest {
 
     @NotBlank
     private String sourceType;
+    @Size(max = 500, message = "输入文本不能超过500字")
     private String text;
     private Long mediaId;
     private String scene;

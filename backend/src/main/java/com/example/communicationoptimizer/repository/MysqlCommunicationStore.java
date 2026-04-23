@@ -56,17 +56,20 @@ public class MysqlCommunicationStore implements CommunicationStore {
     }
 
     @Override
-    public List<HistoryItemDto> listHistory(Long userId) {
+    public List<HistoryItemDto> listHistory(Long userId, int page, int limit) {
         String sql = """
                 SELECT id, normalized_text, scene_code, relation_code, created_at, favorite
                 FROM communication_record
                 WHERE user_id = ?
                 ORDER BY created_at DESC
+                LIMIT ? OFFSET ?
                 """;
 
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, userId);
+            statement.setInt(2, limit);
+            statement.setInt(3, (page - 1) * limit);
             try (ResultSet resultSet = statement.executeQuery()) {
                 List<HistoryItemDto> items = new ArrayList<>();
                 while (resultSet.next()) {

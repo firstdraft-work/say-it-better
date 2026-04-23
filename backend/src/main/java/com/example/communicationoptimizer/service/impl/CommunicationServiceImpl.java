@@ -5,6 +5,7 @@ import com.example.communicationoptimizer.adapter.tts.TtsProvider;
 import com.example.communicationoptimizer.dto.AnalysisDto;
 import com.example.communicationoptimizer.dto.CommunicationDetailDto;
 import com.example.communicationoptimizer.dto.HistoryItemDto;
+import com.example.communicationoptimizer.dto.HistoryPageDto;
 import com.example.communicationoptimizer.dto.OptimizeRequest;
 import com.example.communicationoptimizer.dto.OptimizeResponse;
 import com.example.communicationoptimizer.dto.TtsResponse;
@@ -39,8 +40,14 @@ public class CommunicationServiceImpl implements CommunicationService {
     }
 
     @Override
-    public List<HistoryItemDto> listHistory(Long userId) {
-        return communicationStore.listHistory(userId);
+    public HistoryPageDto listHistory(Long userId, int page, int limit) {
+        List<HistoryItemDto> items = communicationStore.listHistory(userId, page + 1, limit);
+        HistoryPageDto result = new HistoryPageDto();
+        result.setItems(items);
+        result.setPage(page);
+        result.setLimit(limit);
+        result.setHasMore(items.size() == limit);
+        return result;
     }
 
     @Override

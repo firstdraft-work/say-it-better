@@ -48,9 +48,11 @@ public class InMemoryCommunicationStore implements CommunicationStore {
     }
 
     @Override
-    public List<HistoryItemDto> listHistory(Long userId) {
+    public List<HistoryItemDto> listHistory(Long userId, int page, int limit) {
         return records.values().stream()
                 .sorted(Comparator.comparing((StoredRecord record) -> record.createdAt).reversed())
+                .skip((long) (page - 1) * limit)
+                .limit(limit)
                 .map(this::toHistoryItem)
                 .toList();
     }

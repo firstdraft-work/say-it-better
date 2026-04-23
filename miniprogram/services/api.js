@@ -10,10 +10,10 @@ function optimizeCommunication(payload) {
   });
 }
 
-function fetchHistory() {
+function fetchHistory(page, limit) {
   const app = getApp();
   return request({
-    url: `${app.globalData.apiBaseUrl}/communications`,
+    url: `${app.globalData.apiBaseUrl}/communications?page=${page}&limit=${limit}`,
     method: "GET"
   });
 }

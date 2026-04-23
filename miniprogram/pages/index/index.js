@@ -3,6 +3,8 @@ const api = require("../../services/api");
 Page({
   data: {
     inputText: "",
+    charCount: 0,
+    maxChars: 500,
     selectedScene: "workplace",
     selectedRelation: "",
     selectedGoal: "",
@@ -35,9 +37,11 @@ Page({
   },
 
   onInputChange(event) {
+    const value = event.detail.value;
     this.setData({
-      inputText: event.detail.value,
-      inputSourceType: "text"
+      inputText: value,
+      inputSourceType: "text",
+      charCount: value.length
     });
   },
 
@@ -131,20 +135,13 @@ Page({
   },
 
   getFriendlyErrorMessage(error) {
-    const message = (error && (error.message || error.errMsg)) || "";
-
-    if (message.includes("timeout")) {
-      return "请求超时，生成较慢，请稍后重试";
-    }
-
-    if (message.includes("fail") || message.includes("connect") || message.includes("network")) {
-      return "连不上后端，请确认同一Wi-Fi";
-    }
-
-    if (error && error.statusCode) {
-      return `服务异常：${error.statusCode}`;
-    }
-
-    return "请求失败，请检查后端和网络";
+    if (!error) return "请求失败，请稍后重试";
+    if (error.type === "timeout") return "生成较慢，请稍后重试";
+    if (error.type === "network") return "网络不给力，请检查网络设置";
+    if (error.type === "server") return "服务开小差了，请稍后重试";
+    if (error.type === "auth") return "登录已过期，请重新打开小程序";
+    if (error.type === "validation") return error.message || "输入有误";
+    if (error.message) return error.message;
+    return "请求失败，请稍后重试";
   }
 });

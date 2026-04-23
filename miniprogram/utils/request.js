@@ -1,7 +1,6 @@
 module.exports = function request(options) {
   const app = getApp();
 
-  // Read token from globalData or fallback to storage
   const token = app.globalData.token || wx.getStorageSync("token");
   if (token) {
     options.header = options.header || {};
@@ -19,7 +18,6 @@ module.exports = function request(options) {
         }
 
         if (res.statusCode === 401) {
-          // Token expired or invalid, re-login and retry once
           app.login().then(() => {
             const newToken = app.globalData.token;
             options.header = options.header || {};
@@ -31,45 +29,51 @@ module.exports = function request(options) {
                 if (retryRes.statusCode >= 200 && retryRes.statusCode < 300) {
                   resolve(retryRes.data);
                 } else {
-                  reject({
-                    type: "http",
-                    statusCode: retryRes.statusCode,
-                    data: retryRes.data,
-                    message: `HTTP ${retryRes.statusCode}`
-                  });
+                  reject(classifyError(retryRes.statusCode, retryRes.data));
                 }
               },
               fail(err) {
-                reject({
-                  type: "network",
-                  errMsg: err.errMsg || "",
-                  message: err.errMsg || "network error"
-                });
+                reject(classifyNetworkError(err));
               }
             });
           }).catch(() => {
-            reject({
-              type: "auth",
-              message: "登录已过期，请重新打开小程序"
-            });
+            reject({ type: "auth", message: "登录已过期，请重新打开小程序" });
           });
           return;
         }
 
-        reject({
-          type: "http",
-          statusCode: res.statusCode,
-          data: res.data,
-          message: `HTTP ${res.statusCode}`
-        });
+        reject(classifyError(res.statusCode, res.data));
       },
       fail(err) {
-        reject({
-          type: "network",
-          errMsg: err.errMsg || "",
-          message: err.errMsg || "network error"
-        });
+        reject(classifyNetworkError(err));
       }
     });
   });
 };
+
+function classifyError(statusCode, data) {
+  const serverMessage = data && data.message ? data.message : "";
+
+  if (statusCode === 429) {
+    return { type: "rate_limit", statusCode, message: "操作太频繁，请稍后再试", data };
+  }
+  if (statusCode >= 500) {
+    return { type: "server", statusCode, message: "服务开小差了，请稍后重试", data };
+  }
+  if (statusCode === 422 && serverMessage) {
+    return { type: "validation", statusCode, message: serverMessage, data };
+  }
+  return { type: "http", statusCode, message: `请求失败（${statusCode}）`, data };
+}
+
+function classifyNetworkError(err) {
+  const msg = (err && (err.errMsg || "")) || "";
+
+  if (msg.includes("timeout")) {
+    return { type: "timeout", message: "请求超时，请稍后重试" };
+  }
+  if (msg.includes("fail to connect") || msg.includes("ECONNREFUSED")) {
+    return { type: "network", message: "连不上服务器，请检查网络设置" };
+  }
+  return { type: "network", errMsg: msg, message: "网络不给力，请检查网络设置" };
+}

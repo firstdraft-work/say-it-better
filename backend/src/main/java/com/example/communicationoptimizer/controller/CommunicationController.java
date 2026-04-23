@@ -4,6 +4,7 @@ import com.example.communicationoptimizer.common.ApiResponse;
 import com.example.communicationoptimizer.dto.CommunicationDetailDto;
 import com.example.communicationoptimizer.dto.FavoriteRequest;
 import com.example.communicationoptimizer.dto.HistoryItemDto;
+import com.example.communicationoptimizer.dto.HistoryPageDto;
 import com.example.communicationoptimizer.dto.OptimizeRequest;
 import com.example.communicationoptimizer.dto.OptimizeResponse;
 import com.example.communicationoptimizer.dto.TtsRequest;
@@ -17,10 +18,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.DeleteMapping;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/communications")
@@ -44,9 +44,12 @@ public class CommunicationController {
     }
 
     @GetMapping
-    public ApiResponse<List<HistoryItemDto>> listHistory(HttpServletRequest httpRequest) {
+    public ApiResponse<HistoryPageDto> listHistory(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int limit,
+            HttpServletRequest httpRequest) {
         Long userId = (Long) httpRequest.getAttribute("userId");
-        return ApiResponse.success(communicationService.listHistory(userId));
+        return ApiResponse.success(communicationService.listHistory(userId, page, limit));
     }
 
     @GetMapping("/{recordId}")

@@ -33,8 +33,12 @@
       </button>
     </view>
 
-    <view class="card" wx:if="{{!filteredList.length}}">
-      <view style="text-align: center; color: #7d6a5c;">还没有符合条件的记录，先去生成一条试试吧。</view>
+    <view class="card" wx:if="{{!filteredList.length}}" style="text-align: center;">
+      <view style="color: #7d6a5c;">还没有符合条件的记录，先去生成一条试试吧。</view>
+    </view>
+
+    <view wx:if="{{isLoadingMore}}" style="text-align: center; padding: 20rpx 0; color: #7d6a5c; font-size: 26rpx;">
+      加载更多...
     </view>
   </block>
 </view>
