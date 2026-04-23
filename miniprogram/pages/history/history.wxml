@@ -1,17 +1,21 @@
 <view class="page">
-  <view class="card" wx:if="{{isLoading}}" style="text-align: center; padding: 80rpx 0;">
-    <view style="color: #7d6a5c;">加载中...</view>
+  <view class="card" wx:if="{{isLoading}}">
+    <view class="skeleton skeleton-title"></view>
+    <view class="skeleton skeleton-text skeleton-text-long"></view>
+    <view class="skeleton skeleton-text skeleton-text-medium"></view>
+    <view class="skeleton skeleton-text skeleton-text-long mt-md"></view>
+    <view class="skeleton skeleton-text skeleton-text-short"></view>
   </view>
 
   <block wx:else>
     <view class="card">
       <input
-        style="background: #fff; border-radius: 20rpx; padding: 18rpx 20rpx;"
+        class="search-input"
         placeholder="搜索原话、场景或关系"
         value="{{searchKeyword}}"
         bindinput="onSearchChange"
       />
-      <view style="margin-top: 18rpx;">
+      <view class="mt-md">
         <view class="tag {{activeFilter === 'all' ? 'scene-active' : ''}}" data-filter="all" bindtap="onFilterChange">全部</view>
         <view class="tag {{activeFilter === 'favorites' ? 'scene-active' : ''}}" data-filter="favorites" bindtap="onFilterChange">仅收藏</view>
       </view>
@@ -20,11 +24,11 @@
     <view class="card" wx:for="{{filteredList}}" wx:key="recordId">
       <view bindtap="onOpenDetail" data-id="{{item.recordId}}">
         <view style="font-weight: 700;">{{item.originalText}}</view>
-        <view style="margin-top: 14rpx; color: #7d6a5c;">{{item.scene}} · {{item.relation}} · {{item.createdAt}}</view>
+        <view class="text-meta mt-sm">{{item.scene}} · {{item.relation}} · {{item.createdAt}}</view>
       </view>
       <button
         size="mini"
-        style="margin-top: 16rpx;"
+        class="mt-md"
         data-id="{{item.recordId}}"
         data-favorite="{{item.favorite}}"
         bindtap="onToggleFavorite"
@@ -33,11 +37,13 @@
       </button>
     </view>
 
-    <view class="card" wx:if="{{!filteredList.length}}" style="text-align: center;">
-      <view style="color: #7d6a5c;">还没有符合条件的记录，先去生成一条试试吧。</view>
+    <view class="card empty-state" wx:if="{{!filteredList.length}}">
+      <view class="empty-icon">📝</view>
+      <view class="empty-text">还没有符合条件的记录</view>
+      <view class="text-hint mt-sm">先去首页生成一条试试吧</view>
     </view>
 
-    <view wx:if="{{isLoadingMore}}" style="text-align: center; padding: 20rpx 0; color: #7d6a5c; font-size: 26rpx;">
+    <view wx:if="{{isLoadingMore}}" class="text-hint" style="text-align: center; padding: 20rpx 0;">
       加载更多...
     </view>
   </block>
