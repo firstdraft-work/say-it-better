@@ -83,3 +83,9 @@ CREATE TABLE IF NOT EXISTS user_session (
   INDEX idx_token (token),
   INDEX idx_user_id (user_id)
 );
+
+CREATE INDEX idx_cr_user_created ON communication_record (user_id, created_at DESC);
+CREATE INDEX idx_cr_favorite ON communication_record (favorite);
+CREATE INDEX idx_cv_record ON communication_variant (record_id);
+CREATE INDEX idx_ma_record ON media_asset (record_id);
+CREATE INDEX idx_uf_record ON user_feedback (record_id);
