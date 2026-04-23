@@ -11,7 +11,7 @@ Page({
     inputSourceType: "text",
     isSubmitting: false,
     isTranscribing: false,
-    apiBaseUrl: "",
+    showAdvanced: false,
     voiceTips: "支持文字输入，也可以先录音转文字。",
     relationOptions: [
       { value: "leader", label: "领导" },
@@ -27,13 +27,6 @@ Page({
       { value: "apologize", label: "道歉" },
       { value: "remind", label: "提醒" }
     ]
-  },
-
-  onLoad() {
-    const app = getApp();
-    this.setData({
-      apiBaseUrl: app.globalData.apiBaseUrl
-    });
   },
 
   onInputChange(event) {
@@ -63,6 +56,10 @@ Page({
     });
   },
 
+  toggleAdvanced() {
+    this.setData({ showAdvanced: !this.data.showAdvanced });
+  },
+
   onRecordingChange(event) {
     const { isRecording } = event.detail;
     this.setData({
@@ -90,6 +87,7 @@ Page({
       this.setData({
         inputText: asrResponse.data.text || "",
         inputSourceType: "voice",
+        charCount: (asrResponse.data.text || "").length,
         voiceTips: "语音已转成文字，你可以再微调一下再提交。"
       });
     } catch (error) {

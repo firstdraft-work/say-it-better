@@ -1,5 +1,19 @@
-button {
+.voice-btn {
   border-radius: 999rpx;
-  background: #efe2d2;
-  color: #7b5741;
+  background: transparent;
+  border: 2rpx solid #b85c38;
+  color: #b85c38;
+  font-size: 28rpx;
+  padding: 16rpx 40rpx;
+  line-height: 1.4;
+}
+
+.voice-btn.recording {
+  background: #b85c38;
+  color: #fff;
+  border-color: #b85c38;
+}
+
+.voice-btn[disabled] {
+  opacity: 0.5;
 }
