@@ -1,0 +1,9 @@
+app:
+  storage:
+    mode: mysql
+  mysql:
+    url: jdbc:mysql://127.0.0.1:3306/communication_optimizer?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    auto-init-schema: true

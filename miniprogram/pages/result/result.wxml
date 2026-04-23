@@ -1,0 +1,28 @@
+<view class="page" wx:if="{{result}}">
+  <view class="card">
+    <view style="display: flex; justify-content: space-between; align-items: center;">
+      <view style="font-size: 36rpx; font-weight: 700;">识别结果</view>
+      <button size="mini" bindtap="onFavorite">{{isFavorite ? '已收藏' : '收藏'}}</button>
+    </view>
+    <view style="margin-top: 16rpx; color: #7d6a5c;">
+      场景：{{result.analysis.scene}} · 关系：{{result.analysis.relation}} · 目标：{{result.analysis.goal}}
+    </view>
+    <view style="margin-top: 12rpx; color: #7d6a5c;">
+      语气标签：{{result.analysis.toneTagsText}} · 情绪强度：{{result.analysis.emotionLevel}}/5
+    </view>
+    <view style="margin-top: 12rpx; color: #7d6a5c;" wx:if="{{result.analysis.riskPointsText}}">
+      风险点：{{result.analysis.riskPointsText}}
+    </view>
+  </view>
+
+  <view class="card" style="margin-top: 20rpx;" wx:for="{{result.variants}}" wx:key="type">
+    <view style="font-size: 32rpx; font-weight: 700;">{{item.title}}</view>
+    <view style="margin-top: 18rpx; line-height: 1.8;">{{item.text}}</view>
+    <view style="display: flex; gap: 20rpx; margin-top: 24rpx;">
+      <button size="mini" data-text="{{item.text}}" data-type="{{item.type}}" bindtap="onCopy">复制</button>
+      <button size="mini" data-text="{{item.text}}" data-type="{{item.type}}" bindtap="onPlay">
+        {{playingVariantType === item.type ? '停止播放' : (ttsLoadingVariantType === item.type ? '生成中...' : '转语音')}}
+      </button>
+    </view>
+  </view>
+</view>

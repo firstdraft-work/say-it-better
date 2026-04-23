@@ -1,0 +1,4 @@
+.scene-active {
+  background: #b85c38;
+  color: #fff;
+}

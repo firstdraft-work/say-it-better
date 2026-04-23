@@ -1,0 +1,23 @@
+<view class="page">
+  <view class="card">
+    <view style="font-size: 34rpx; font-weight: 700;">我的设置</view>
+    <view style="margin-top: 16rpx;">默认语音风格：自然</view>
+    <view style="margin-top: 12rpx;">历史记录、收藏、隐私设置后续可继续扩展。</view>
+  </view>
+
+  <view class="card" style="margin-top: 20rpx;">
+    <view style="font-size: 30rpx; font-weight: 700;">隐私与录音说明</view>
+    <view style="margin-top: 16rpx; line-height: 1.8;">
+      我们会处理你主动输入的文本、主动录制上传的语音，以及系统生成的表达优化结果。
+    </view>
+    <view style="margin-top: 12rpx; line-height: 1.8;">
+      录音内容仅用于语音转文字与表达优化，不用于与你当前功能无关的用途。
+    </view>
+    <view style="margin-top: 12rpx; line-height: 1.8;">
+      文本优化由云端大模型完成，语音识别与语音合成由腾讯云提供支持。
+    </view>
+    <view style="margin-top: 12rpx; line-height: 1.8;">
+      你可以随时删除历史记录，请勿输入或录制违法违规、侵犯他人隐私的内容。
+    </view>
+  </view>
+</view>

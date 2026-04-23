@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: communication-optimizer-backend
+
+app:
+  storage:
+    mode: in-memory
+  providers:
+    llm: glm
+    asr: mock
+    tts: mock
+  llm:
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      base-url: ${OPENAI_BASE_URL:https://api.openai.com}
+      model: ${OPENAI_MODEL:gpt-5.2}
+    glm:
+      api-key: ${GLM_API_KEY:}
+      base-url: ${GLM_BASE_URL:https://open.bigmodel.cn/api/coding/paas/v4}
+      model: ${GLM_MODEL:glm-5-turbo}
+  asr:
+    tencent:
+      secret-id: ${TENCENT_ASR_SECRET_ID:}
+      secret-key: ${TENCENT_ASR_SECRET_KEY:}
+      endpoint: ${TENCENT_ASR_ENDPOINT:asr.tencentcloudapi.com}
+      region: ${TENCENT_ASR_REGION:ap-shanghai}
+      engine-type: ${TENCENT_ASR_ENGINE_TYPE:16k_zh}
+  mysql:
+    url:
+    username:
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    auto-init-schema: false
+
+# 可切换值示例
+# storage.mode: in-memory | mysql
+# mysql.auto-init-schema: true | false
+# llm: mock | openai | glm | local
+# asr: mock | openai | tencent | local
+# tts: mock | tencent | azure | edge

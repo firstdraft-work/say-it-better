@@ -1,0 +1,24 @@
+<view class="page">
+  <view wx:if="{{detail}}">
+    <view class="card">
+      <view style="font-size: 34rpx; font-weight: 700;">原始输入</view>
+      <view style="margin-top: 16rpx; line-height: 1.8;">{{detail.originalText}}</view>
+      <view style="margin-top: 16rpx; color: #7d6a5c;">
+        场景：{{detail.analysis.scene}} · 关系：{{detail.analysis.relation}} · 目标：{{detail.analysis.goal}}
+      </view>
+      <view style="margin-top: 12rpx; color: #7d6a5c;">
+        语气标签：{{detail.analysis.toneTagsText}} · 情绪强度：{{detail.analysis.emotionLevel}}/5
+      </view>
+      <view style="margin-top: 12rpx; color: #7d6a5c;" wx:if="{{detail.analysis.riskPointsText}}">
+        风险点：{{detail.analysis.riskPointsText}}
+      </view>
+    </view>
+
+    <view class="card" style="margin-top: 20rpx;" wx:for="{{detail.variants}}" wx:key="type">
+      <view style="font-size: 30rpx; font-weight: 700;">{{item.title}}</view>
+      <view style="margin-top: 16rpx; line-height: 1.8;">{{item.text}}</view>
+    </view>
+
+    <button class="btn-primary" style="margin-top: 24rpx;" bindtap="onDelete">删除这条记录</button>
+  </view>
+</view>

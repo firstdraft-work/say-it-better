@@ -1,0 +1,1 @@
+ALTER TABLE `media_asset` MODIFY COLUMN `size_bytes` bigint;

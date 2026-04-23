@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "Say It Better",
+  "usingComponents": {
+    "voice-recorder": "/components/voice-recorder/voice-recorder"
+  }
+}

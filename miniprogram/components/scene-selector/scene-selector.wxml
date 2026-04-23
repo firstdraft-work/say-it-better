@@ -1,0 +1,3 @@
+<view>
+  <view class="tag" wx:for="{{scenes}}" wx:key="value">{{item.label}}</view>
+</view>

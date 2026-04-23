@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Java
+backend/target/
+
+# WeChat DevTools
+miniprogram/project.private.config.json
+
+# Drizzle / Node
+database/node_modules/
+database/dist/
+
+# Local Maven repo
+.m2repo/
+
+# Deploy configs (may contain secrets)
+deploy/
+

@@ -1,0 +1,9 @@
+{
+  "desc": "Say It Better 沟通助手 sitemap",
+  "rules": [
+    {
+      "action": "allow",
+      "page": "*"
+    }
+  ]
+}

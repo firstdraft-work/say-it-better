@@ -1,0 +1,5 @@
+button {
+  border-radius: 999rpx;
+  background: #efe2d2;
+  color: #7b5741;
+}

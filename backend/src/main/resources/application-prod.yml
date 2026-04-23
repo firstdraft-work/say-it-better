@@ -1,0 +1,51 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: communication-optimizer-backend
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+app:
+  storage:
+    mode: ${APP_STORAGE_MODE:mysql}
+  providers:
+    llm: ${APP_LLM_PROVIDER:glm}
+    asr: ${APP_ASR_PROVIDER:tencent}
+    tts: ${APP_TTS_PROVIDER:tencent}
+  llm:
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      base-url: ${OPENAI_BASE_URL:https://api.openai.com}
+      model: ${OPENAI_MODEL:gpt-5.2}
+    glm:
+      api-key: ${GLM_API_KEY:}
+      base-url: ${GLM_BASE_URL:https://open.bigmodel.cn/api/coding/paas/v4}
+      model: ${GLM_MODEL:glm-5-turbo}
+  asr:
+    tencent:
+      secret-id: ${APP_ASR_TENCENT_SECRET_ID:}
+      secret-key: ${APP_ASR_TENCENT_SECRET_KEY:}
+      endpoint: ${TENCENT_ASR_ENDPOINT:asr.tencentcloudapi.com}
+      region: ${TENCENT_ASR_REGION:ap-shanghai}
+      engine-type: ${TENCENT_ASR_ENGINE_TYPE:16k_zh}
+  tts:
+    tencent:
+      secret-id: ${APP_TTS_TENCENT_SECRET_ID:}
+      secret-key: ${APP_TTS_TENCENT_SECRET_KEY:}
+      endpoint: ${TENCENT_TTS_ENDPOINT:tts.tencentcloudapi.com}
+      region: ${TENCENT_TTS_REGION:ap-shanghai}
+      voice-type: ${TENCENT_TTS_VOICE_TYPE:1001}
+      sample-rate: ${TENCENT_TTS_SAMPLE_RATE:16000}
+      codec: ${TENCENT_TTS_CODEC:mp3}
+      speed: ${TENCENT_TTS_SPEED:0}
+      volume: ${TENCENT_TTS_VOLUME:5}
+  mysql:
+    url: ${APP_MYSQL_URL:}
+    username: ${APP_MYSQL_USERNAME:}
+    password: ${APP_MYSQL_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    auto-init-schema: ${APP_MYSQL_AUTO_INIT_SCHEMA:false}
