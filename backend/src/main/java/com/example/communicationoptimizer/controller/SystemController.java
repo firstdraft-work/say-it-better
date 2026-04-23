@@ -7,14 +7,17 @@ import com.example.communicationoptimizer.common.ApiResponse;
 import com.example.communicationoptimizer.config.AppStorageProperties;
 import com.example.communicationoptimizer.dto.ProviderInfoDto;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping("/api/v1/system")
 public class SystemController {
+
+    @GetMapping("/")
+    public ApiResponse<String> health() {
+        return ApiResponse.success("ok");
+    }
 
     private final RoutingLlmProvider llmProvider;
     private final RoutingAsrProvider asrProvider;
@@ -33,7 +36,7 @@ public class SystemController {
         this.storageProperties = storageProperties;
     }
 
-    @GetMapping("/providers")
+    @GetMapping("/api/v1/system/providers")
     public ApiResponse<ProviderInfoDto> getProviders() {
         ProviderInfoDto dto = new ProviderInfoDto();
         dto.setStorageMode(storageProperties.getMode());

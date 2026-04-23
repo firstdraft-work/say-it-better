@@ -4,6 +4,7 @@ import com.example.communicationoptimizer.common.ApiResponse;
 import com.example.communicationoptimizer.dto.AsrRequest;
 import com.example.communicationoptimizer.dto.AsrResponse;
 import com.example.communicationoptimizer.service.SpeechService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,8 @@ public class SpeechController {
     }
 
     @PostMapping("/asr")
-    public ApiResponse<AsrResponse> asr(@Valid @RequestBody AsrRequest request) {
-        return ApiResponse.success(speechService.transcribe(request.getMediaId()));
+    public ApiResponse<AsrResponse> asr(@Valid @RequestBody AsrRequest request, HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute("userId");
+        return ApiResponse.success(speechService.transcribe(userId, request.getMediaId()));
     }
 }

@@ -28,9 +28,10 @@ public class CommunicationServiceImpl implements CommunicationService {
     }
 
     @Override
-    public OptimizeResponse optimize(OptimizeRequest request) {
+    public OptimizeResponse optimize(Long userId, OptimizeRequest request) {
         OptimizeResponse generated = llmProvider.generate(request);
         return communicationStore.saveGenerated(
+                userId,
                 request.getText() != null ? request.getText() : "",
                 generated.getAnalysis(),
                 generated.getVariants()
@@ -38,28 +39,28 @@ public class CommunicationServiceImpl implements CommunicationService {
     }
 
     @Override
-    public List<HistoryItemDto> listHistory() {
-        return communicationStore.listHistory();
+    public List<HistoryItemDto> listHistory(Long userId) {
+        return communicationStore.listHistory(userId);
     }
 
     @Override
-    public CommunicationDetailDto getDetail(Long recordId) {
-        return communicationStore.getDetail(recordId);
+    public CommunicationDetailDto getDetail(Long userId, Long recordId) {
+        return communicationStore.getDetail(userId, recordId);
     }
 
     @Override
-    public HistoryItemDto updateFavorite(Long recordId, boolean favorite) {
-        return communicationStore.updateFavorite(recordId, favorite);
+    public HistoryItemDto updateFavorite(Long userId, Long recordId, boolean favorite) {
+        return communicationStore.updateFavorite(userId, recordId, favorite);
     }
 
     @Override
-    public void deleteRecord(Long recordId) {
-        communicationStore.delete(recordId);
+    public void deleteRecord(Long userId, Long recordId) {
+        communicationStore.delete(userId, recordId);
     }
 
     @Override
-    public TtsResponse synthesize(Long recordId, Long variantId, String text) {
-        communicationStore.getDetail(recordId);
+    public TtsResponse synthesize(Long userId, Long recordId, Long variantId, String text) {
+        communicationStore.getDetail(userId, recordId);
         TtsResponse response = new TtsResponse();
         response.setAudioUrl(ttsProvider.synthesize(text));
         return response;

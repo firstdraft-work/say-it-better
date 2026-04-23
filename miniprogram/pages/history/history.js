@@ -5,17 +5,19 @@ Page({
     list: [],
     filteredList: [],
     searchKeyword: "",
-    activeFilter: "all"
+    activeFilter: "all",
+    isLoading: true
   },
 
   async onShow() {
+    this.setData({ isLoading: true });
     try {
       const response = await api.fetchHistory();
-      this.setData({ list: response.data || [] }, () => {
+      this.setData({ list: response.data || [], isLoading: false }, () => {
         this.applyFilters();
       });
     } catch (error) {
-      wx.showToast({ title: "历史加载失败", icon: "none" });
+      this.setData({ list: [], filteredList: [], isLoading: false });
     }
   },
 

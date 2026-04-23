@@ -4,5 +4,5 @@ import com.example.communicationoptimizer.dto.AsrResponse;
 
 public interface SpeechService {
 
-    AsrResponse transcribe(Long mediaId);
+    AsrResponse transcribe(Long userId, Long mediaId);
 }

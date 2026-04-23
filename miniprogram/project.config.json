@@ -1,5 +1,5 @@
 {
-  "appid": "wx676fd3525c302534",
+  "appid": "wx9db325a9c5030e52",
   "projectname": "Say It Better 沟通助手",
   "compileType": "miniprogram",
   "libVersion": "3.7.6",
@@ -8,7 +8,7 @@
     "es6": true,
     "enhance": true,
     "postcss": true,
-    "minified": false,
+    "minified": true,
     "compileWorklet": false,
     "uglifyFileName": false,
     "uploadWithSourceMap": true,

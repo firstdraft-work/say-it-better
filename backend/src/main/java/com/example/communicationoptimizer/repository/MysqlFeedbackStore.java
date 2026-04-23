@@ -21,7 +21,7 @@ public class MysqlFeedbackStore implements FeedbackStore {
     }
 
     @Override
-    public void save(FeedbackRequest request) {
+    public void save(Long userId, FeedbackRequest request) {
         String sql = """
                 INSERT INTO user_feedback (
                     user_id, record_id, variant_type, action_type, score, comment_text, created_at
@@ -30,7 +30,7 @@ public class MysqlFeedbackStore implements FeedbackStore {
 
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, 0L);
+            statement.setLong(1, userId);
             statement.setLong(2, request.getRecordId());
             statement.setString(3, request.getVariantType());
             statement.setString(4, request.getActionType());

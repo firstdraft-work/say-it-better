@@ -16,7 +16,7 @@ public class InMemoryMediaStore implements MediaStore {
     private final ConcurrentMap<Long, StoredMedia> mediaMap = new ConcurrentHashMap<>();
 
     @Override
-    public StoredMedia save(String fileName, String source, int durationMs, String fileUrl, String localFilePath) {
+    public StoredMedia save(Long userId, String fileName, String source, int durationMs, String fileUrl, String localFilePath) {
         long mediaId = mediaIdGenerator.incrementAndGet();
 
         StoredMedia storedMedia = new StoredMedia();

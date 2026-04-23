@@ -25,10 +25,11 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public MediaUploadResponse upload(MediaUploadRequest request) {
+    public MediaUploadResponse upload(Long userId, MediaUploadRequest request) {
         String safeSource = request.getSource() != null ? request.getSource() : "voice";
         String fileUrl = "https://example.com/mock-media/" + request.getFileName();
         StoredMedia storedMedia = mediaStore.save(
+                userId,
                 request.getFileName(),
                 safeSource,
                 request.getDurationMs(),
@@ -44,13 +45,14 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public MediaUploadResponse uploadFile(MultipartFile file, String source, int durationMs) {
+    public MediaUploadResponse uploadFile(Long userId, MultipartFile file, String source, int durationMs) {
         String fileName = file.getOriginalFilename() != null ? file.getOriginalFilename() : "voice-input.mp3";
         String safeSource = source != null ? source : "voice";
         String localPath = saveMultipartFile(file, fileName);
         String fileUrl = "https://example.com/mock-media/" + fileName;
 
         StoredMedia storedMedia = mediaStore.save(
+                userId,
                 fileName,
                 safeSource,
                 durationMs,

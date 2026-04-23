@@ -117,6 +117,16 @@ function deleteCommunication(recordId) {
   });
 }
 
+function wxLogin(code) {
+  const app = getApp();
+  return request({
+    url: `${app.globalData.apiBaseUrl}/auth/wx/login`,
+    method: "POST",
+    data: { code },
+    timeout: 10000
+  });
+}
+
 function submitFeedback(payload) {
   const app = getApp();
   return request({
@@ -128,6 +138,7 @@ function submitFeedback(payload) {
 }
 
 module.exports = {
+  wxLogin,
   optimizeCommunication,
   fetchHistory,
   uploadMedia,

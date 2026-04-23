@@ -43,6 +43,9 @@ app:
       codec: ${TENCENT_TTS_CODEC:mp3}
       speed: ${TENCENT_TTS_SPEED:0}
       volume: ${TENCENT_TTS_VOLUME:5}
+  wechat:
+    app-id: ${WECHAT_APP_ID:}
+    app-secret: ${WECHAT_APP_SECRET:}
   mysql:
     url: ${APP_MYSQL_URL:}
     username: ${APP_MYSQL_USERNAME:}

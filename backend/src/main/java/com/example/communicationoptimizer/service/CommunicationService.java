@@ -10,15 +10,15 @@ import java.util.List;
 
 public interface CommunicationService {
 
-    OptimizeResponse optimize(OptimizeRequest request);
+    OptimizeResponse optimize(Long userId, OptimizeRequest request);
 
-    List<HistoryItemDto> listHistory();
+    List<HistoryItemDto> listHistory(Long userId);
 
-    CommunicationDetailDto getDetail(Long recordId);
+    CommunicationDetailDto getDetail(Long userId, Long recordId);
 
-    HistoryItemDto updateFavorite(Long recordId, boolean favorite);
+    HistoryItemDto updateFavorite(Long userId, Long recordId, boolean favorite);
 
-    void deleteRecord(Long recordId);
+    void deleteRecord(Long userId, Long recordId);
 
-    TtsResponse synthesize(Long recordId, Long variantId, String text);
+    TtsResponse synthesize(Long userId, Long recordId, Long variantId, String text);
 }

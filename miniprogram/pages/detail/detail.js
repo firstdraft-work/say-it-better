@@ -2,14 +2,16 @@ const api = require("../../services/api");
 
 Page({
   data: {
-    detail: null
+    detail: null,
+    isLoading: true
   },
 
   async onLoad(options) {
     try {
       const response = await api.fetchCommunicationDetail(options.id);
-      this.setData({ detail: this.normalizeDetail(response.data) });
+      this.setData({ detail: this.normalizeDetail(response.data), isLoading: false });
     } catch (error) {
+      this.setData({ isLoading: false });
       wx.showToast({ title: "详情加载失败", icon: "none" });
     }
   },
@@ -26,14 +28,27 @@ Page({
     };
   },
 
-  async onDelete() {
+  onDelete() {
     const detail = this.data.detail;
     if (!detail) {
       return;
     }
 
+    wx.showModal({
+      title: "确认删除",
+      content: "删除后无法恢复，确定要删除这条记录吗？",
+      confirmColor: "#B85C38",
+      success: (res) => {
+        if (res.confirm) {
+          this.doDelete();
+        }
+      }
+    });
+  },
+
+  async doDelete() {
     try {
-      await api.deleteCommunication(detail.recordId);
+      await api.deleteCommunication(this.data.detail.recordId);
       wx.showToast({ title: "已删除", icon: "success" });
       setTimeout(() => {
         wx.navigateBack();

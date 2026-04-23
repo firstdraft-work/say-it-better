@@ -23,7 +23,7 @@ public class MysqlMediaStore implements MediaStore {
     }
 
     @Override
-    public StoredMedia save(String fileName, String source, int durationMs, String fileUrl, String localFilePath) {
+    public StoredMedia save(Long userId, String fileName, String source, int durationMs, String fileUrl, String localFilePath) {
         String sql = """
                 INSERT INTO media_asset (
                     user_id, record_id, variant_id, asset_type, storage_provider, bucket_name,
@@ -33,7 +33,7 @@ public class MysqlMediaStore implements MediaStore {
 
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setLong(1, 0L);
+            statement.setLong(1, userId);
             statement.setObject(2, null);
             statement.setObject(3, null);
             statement.setString(4, "input_audio");

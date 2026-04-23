@@ -5,7 +5,8 @@ Page({
     result: null,
     isFavorite: false,
     playingVariantType: "",
-    ttsLoadingVariantType: ""
+    ttsLoadingVariantType: "",
+    isLoading: true
   },
 
   async onLoad(options) {
@@ -20,11 +21,12 @@ Page({
 
     const latestResult = wx.getStorageSync("latestResult");
     if (latestResult && String(latestResult.recordId) === options.recordId) {
-      this.setData({ result: this.normalizeResult(latestResult), isFavorite: !!latestResult.favorite });
+      this.setData({ result: this.normalizeResult(latestResult), isFavorite: !!latestResult.favorite, isLoading: false });
       return;
     }
 
     if (!options.recordId) {
+      this.setData({ isLoading: false });
       return;
     }
 
@@ -36,9 +38,11 @@ Page({
           analysis: response.data.analysis,
           variants: response.data.variants
         }),
-        isFavorite: !!response.data.favorite
+        isFavorite: !!response.data.favorite,
+        isLoading: false
       });
     } catch (error) {
+      this.setData({ isLoading: false });
       wx.showToast({ title: "结果加载失败", icon: "none" });
     }
   },

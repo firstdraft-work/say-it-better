@@ -10,13 +10,13 @@ import java.util.List;
 
 public interface CommunicationStore {
 
-    OptimizeResponse saveGenerated(String originalText, AnalysisDto analysis, List<VariantDto> variants);
+    OptimizeResponse saveGenerated(Long userId, String originalText, AnalysisDto analysis, List<VariantDto> variants);
 
-    List<HistoryItemDto> listHistory();
+    List<HistoryItemDto> listHistory(Long userId);
 
-    CommunicationDetailDto getDetail(Long recordId);
+    CommunicationDetailDto getDetail(Long userId, Long recordId);
 
-    HistoryItemDto updateFavorite(Long recordId, boolean favorite);
+    HistoryItemDto updateFavorite(Long userId, Long recordId, boolean favorite);
 
-    void delete(Long recordId);
+    void delete(Long userId, Long recordId);
 }

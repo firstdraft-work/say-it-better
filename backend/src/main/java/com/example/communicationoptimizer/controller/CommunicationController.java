@@ -33,8 +33,9 @@ public class CommunicationController {
     }
 
     @PostMapping("/optimize")
-    public ApiResponse<OptimizeResponse> optimize(@Valid @RequestBody OptimizeRequest request) {
-        return ApiResponse.success(communicationService.optimize(request));
+    public ApiResponse<OptimizeResponse> optimize(@Valid @RequestBody OptimizeRequest request, HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute("userId");
+        return ApiResponse.success(communicationService.optimize(userId, request));
     }
 
     @GetMapping("/optimize")
@@ -43,13 +44,15 @@ public class CommunicationController {
     }
 
     @GetMapping
-    public ApiResponse<List<HistoryItemDto>> listHistory() {
-        return ApiResponse.success(communicationService.listHistory());
+    public ApiResponse<List<HistoryItemDto>> listHistory(HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute("userId");
+        return ApiResponse.success(communicationService.listHistory(userId));
     }
 
     @GetMapping("/{recordId}")
-    public ApiResponse<CommunicationDetailDto> getDetail(@PathVariable Long recordId) {
-        return ApiResponse.success(communicationService.getDetail(recordId));
+    public ApiResponse<CommunicationDetailDto> getDetail(@PathVariable Long recordId, HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute("userId");
+        return ApiResponse.success(communicationService.getDetail(userId, recordId));
     }
 
     @PostMapping("/{recordId}/tts")
@@ -58,7 +61,8 @@ public class CommunicationController {
             @Valid @RequestBody TtsRequest request,
             HttpServletRequest httpServletRequest
     ) {
-        TtsResponse response = communicationService.synthesize(recordId, null, request.getText());
+        Long userId = (Long) httpServletRequest.getAttribute("userId");
+        TtsResponse response = communicationService.synthesize(userId, recordId, null, request.getText());
         if (response.getAudioUrl() != null && response.getAudioUrl().startsWith("/")) {
             String base = httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + ":" + httpServletRequest.getServerPort();
             response.setAudioUrl(base + response.getAudioUrl());
@@ -67,13 +71,15 @@ public class CommunicationController {
     }
 
     @PatchMapping("/{recordId}/favorite")
-    public ApiResponse<HistoryItemDto> favorite(@PathVariable Long recordId, @RequestBody FavoriteRequest request) {
-        return ApiResponse.success(communicationService.updateFavorite(recordId, request.isFavorite()));
+    public ApiResponse<HistoryItemDto> favorite(@PathVariable Long recordId, @RequestBody FavoriteRequest request, HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute("userId");
+        return ApiResponse.success(communicationService.updateFavorite(userId, recordId, request.isFavorite()));
     }
 
     @DeleteMapping("/{recordId}")
-    public ApiResponse<Void> delete(@PathVariable Long recordId) {
-        communicationService.deleteRecord(recordId);
+    public ApiResponse<Void> delete(@PathVariable Long recordId, HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute("userId");
+        communicationService.deleteRecord(userId, recordId);
         return ApiResponse.success(null);
     }
 }

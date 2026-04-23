@@ -19,7 +19,7 @@ public class SpeechServiceImpl implements SpeechService {
     }
 
     @Override
-    public AsrResponse transcribe(Long mediaId) {
+    public AsrResponse transcribe(Long userId, Long mediaId) {
         StoredMedia media = mediaStore.get(mediaId);
 
         AsrResponse response = new AsrResponse();

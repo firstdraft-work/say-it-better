@@ -16,7 +16,7 @@ public class InMemoryFeedbackStore implements FeedbackStore {
     private final List<StoredFeedback> feedbackList = new CopyOnWriteArrayList<>();
 
     @Override
-    public void save(FeedbackRequest request) {
+    public void save(Long userId, FeedbackRequest request) {
         StoredFeedback feedback = new StoredFeedback();
         feedback.recordId = request.getRecordId();
         feedback.actionType = request.getActionType();

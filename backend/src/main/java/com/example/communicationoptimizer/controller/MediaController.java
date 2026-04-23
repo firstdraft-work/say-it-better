@@ -5,6 +5,7 @@ import com.example.communicationoptimizer.adapter.tts.LocalAudioFileStore;
 import com.example.communicationoptimizer.dto.MediaUploadRequest;
 import com.example.communicationoptimizer.dto.MediaUploadResponse;
 import com.example.communicationoptimizer.service.MediaService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -35,17 +36,20 @@ public class MediaController {
     }
 
     @PostMapping("/upload")
-    public ApiResponse<MediaUploadResponse> upload(@Valid @RequestBody MediaUploadRequest request) {
-        return ApiResponse.success(mediaService.upload(request));
+    public ApiResponse<MediaUploadResponse> upload(@Valid @RequestBody MediaUploadRequest request, HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute("userId");
+        return ApiResponse.success(mediaService.upload(userId, request));
     }
 
     @PostMapping("/upload-file")
     public ApiResponse<MediaUploadResponse> uploadFile(
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "source", required = false) String source,
-            @RequestParam(value = "durationMs", required = false, defaultValue = "0") int durationMs
+            @RequestParam(value = "durationMs", required = false, defaultValue = "0") int durationMs,
+            HttpServletRequest httpRequest
     ) {
-        return ApiResponse.success(mediaService.uploadFile(file, source, durationMs));
+        Long userId = (Long) httpRequest.getAttribute("userId");
+        return ApiResponse.success(mediaService.uploadFile(userId, file, source, durationMs));
     }
 
     @GetMapping("/audio/{fileName}")

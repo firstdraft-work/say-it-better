@@ -1,0 +1,18 @@
+[Unit]
+Description=Communication Optimizer Backend
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/srv/communication-optimizer/backend
+EnvironmentFile=/srv/communication-optimizer/backend/.env
+ExecStart=/usr/bin/java -Xms256m -Xmx512m -jar /srv/communication-optimizer/backend/communication-optimizer-backend-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+Restart=on-failure
+RestartSec=10
+
+StandardOutput=append:/srv/communication-optimizer/backend/app.log
+StandardError=append:/srv/communication-optimizer/backend/app.log
+
+[Install]
+WantedBy=multi-user.target

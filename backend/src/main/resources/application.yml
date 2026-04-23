@@ -28,6 +28,9 @@ app:
       endpoint: ${TENCENT_ASR_ENDPOINT:asr.tencentcloudapi.com}
       region: ${TENCENT_ASR_REGION:ap-shanghai}
       engine-type: ${TENCENT_ASR_ENGINE_TYPE:16k_zh}
+  wechat:
+    app-id: ${WECHAT_APP_ID:}
+    app-secret: ${WECHAT_APP_SECRET:}
   mysql:
     url:
     username:

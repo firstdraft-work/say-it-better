@@ -15,7 +15,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public void submit(FeedbackRequest request) {
-        feedbackStore.save(request);
+    public void submit(Long userId, FeedbackRequest request) {
+        feedbackStore.save(userId, request);
     }
 }

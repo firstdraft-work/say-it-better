@@ -38,10 +38,10 @@ public class MysqlCommunicationStore implements CommunicationStore {
     }
 
     @Override
-    public OptimizeResponse saveGenerated(String originalText, AnalysisDto analysis, List<VariantDto> variants) {
+    public OptimizeResponse saveGenerated(Long userId, String originalText, AnalysisDto analysis, List<VariantDto> variants) {
         try (Connection connection = connectionFactory.getConnection()) {
             connection.setAutoCommit(false);
-            long recordId = insertRecord(connection, originalText, analysis);
+            long recordId = insertRecord(connection, userId, originalText, analysis);
             insertVariants(connection, recordId, variants);
             connection.commit();
 
@@ -56,40 +56,43 @@ public class MysqlCommunicationStore implements CommunicationStore {
     }
 
     @Override
-    public List<HistoryItemDto> listHistory() {
+    public List<HistoryItemDto> listHistory(Long userId) {
         String sql = """
                 SELECT id, normalized_text, scene_code, relation_code, created_at, favorite
                 FROM communication_record
+                WHERE user_id = ?
                 ORDER BY created_at DESC
                 """;
 
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
-            List<HistoryItemDto> items = new ArrayList<>();
-            while (resultSet.next()) {
-                HistoryItemDto item = new HistoryItemDto();
-                item.setRecordId(resultSet.getLong("id"));
-                item.setOriginalText(resultSet.getString("normalized_text"));
-                item.setScene(resultSet.getString("scene_code"));
-                item.setRelation(resultSet.getString("relation_code"));
-                item.setCreatedAt(TIME_FORMATTER.format(resultSet.getTimestamp("created_at").toLocalDateTime()));
-                item.setFavorite(resultSet.getBoolean("favorite"));
-                items.add(item);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                List<HistoryItemDto> items = new ArrayList<>();
+                while (resultSet.next()) {
+                    HistoryItemDto item = new HistoryItemDto();
+                    item.setRecordId(resultSet.getLong("id"));
+                    item.setOriginalText(resultSet.getString("normalized_text"));
+                    item.setScene(resultSet.getString("scene_code"));
+                    item.setRelation(resultSet.getString("relation_code"));
+                    item.setCreatedAt(TIME_FORMATTER.format(resultSet.getTimestamp("created_at").toLocalDateTime()));
+                    item.setFavorite(resultSet.getBoolean("favorite"));
+                    items.add(item);
+                }
+                return items;
             }
-            return items;
         } catch (SQLException exception) {
             throw new IllegalStateException("Failed to list communication records", exception);
         }
     }
 
     @Override
-    public CommunicationDetailDto getDetail(Long recordId) {
+    public CommunicationDetailDto getDetail(Long userId, Long recordId) {
         String recordSql = """
                 SELECT id, normalized_text, scene_code, relation_code, goal_code, tone_tags, extra_meta,
                        emotion_level, favorite, created_at
                 FROM communication_record
-                WHERE id = ?
+                WHERE user_id = ? AND id = ?
                 """;
         String variantSql = """
                 SELECT variant_type, title, content
@@ -101,7 +104,8 @@ public class MysqlCommunicationStore implements CommunicationStore {
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement recordStatement = connection.prepareStatement(recordSql);
              PreparedStatement variantStatement = connection.prepareStatement(variantSql)) {
-            recordStatement.setLong(1, recordId);
+            recordStatement.setLong(1, userId);
+            recordStatement.setLong(2, recordId);
             try (ResultSet recordResultSet = recordStatement.executeQuery()) {
                 if (!recordResultSet.next()) {
                     throw new NoSuchElementException("record not found");
@@ -143,32 +147,34 @@ public class MysqlCommunicationStore implements CommunicationStore {
     }
 
     @Override
-    public HistoryItemDto updateFavorite(Long recordId, boolean favorite) {
-        String updateSql = "UPDATE communication_record SET favorite = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+    public HistoryItemDto updateFavorite(Long userId, Long recordId, boolean favorite) {
+        String updateSql = "UPDATE communication_record SET favorite = ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ? AND id = ?";
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(updateSql)) {
             statement.setBoolean(1, favorite);
-            statement.setLong(2, recordId);
+            statement.setLong(2, userId);
+            statement.setLong(3, recordId);
             int updated = statement.executeUpdate();
             if (updated == 0) {
                 throw new NoSuchElementException("record not found");
             }
-            return toHistoryItem(getDetail(recordId));
+            return toHistoryItem(getDetail(userId, recordId));
         } catch (SQLException exception) {
             throw new IllegalStateException("Failed to update favorite", exception);
         }
     }
 
     @Override
-    public void delete(Long recordId) {
+    public void delete(Long userId, Long recordId) {
         try (Connection connection = connectionFactory.getConnection()) {
             connection.setAutoCommit(false);
             deleteByRecordId(connection, "DELETE FROM communication_variant WHERE record_id = ?", recordId);
             deleteByRecordId(connection, "DELETE FROM user_feedback WHERE record_id = ?", recordId);
             deleteByRecordId(connection, "DELETE FROM media_asset WHERE record_id = ?", recordId);
 
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM communication_record WHERE id = ?")) {
-                statement.setLong(1, recordId);
+            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM communication_record WHERE user_id = ? AND id = ?")) {
+                statement.setLong(1, userId);
+                statement.setLong(2, recordId);
                 int deleted = statement.executeUpdate();
                 if (deleted == 0) {
                     throw new NoSuchElementException("record not found");
@@ -180,7 +186,7 @@ public class MysqlCommunicationStore implements CommunicationStore {
         }
     }
 
-    private long insertRecord(Connection connection, String originalText, AnalysisDto analysis) throws SQLException {
+    private long insertRecord(Connection connection, Long userId, String originalText, AnalysisDto analysis) throws SQLException {
         String sql = """
                 INSERT INTO communication_record (
                     user_id, source_type, input_text, asr_text, normalized_text, scene_code, scene_source,
@@ -190,7 +196,7 @@ public class MysqlCommunicationStore implements CommunicationStore {
                 """;
 
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setLong(1, 0L);
+            statement.setLong(1, userId);
             statement.setString(2, "text");
             statement.setString(3, originalText);
             statement.setString(4, null);

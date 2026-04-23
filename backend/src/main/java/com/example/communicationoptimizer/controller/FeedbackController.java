@@ -3,6 +3,7 @@ package com.example.communicationoptimizer.controller;
 import com.example.communicationoptimizer.common.ApiResponse;
 import com.example.communicationoptimizer.dto.FeedbackRequest;
 import com.example.communicationoptimizer.service.FeedbackService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +23,9 @@ public class FeedbackController {
     }
 
     @PostMapping
-    public ApiResponse<Map<String, Object>> submit(@Valid @RequestBody FeedbackRequest request) {
-        feedbackService.submit(request);
+    public ApiResponse<Map<String, Object>> submit(@Valid @RequestBody FeedbackRequest request, HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute("userId");
+        feedbackService.submit(userId, request);
         return ApiResponse.success(Map.of("accepted", true));
     }
 }

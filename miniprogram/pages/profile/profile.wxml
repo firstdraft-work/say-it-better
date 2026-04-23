@@ -20,4 +20,8 @@
       你可以随时删除历史记录，请勿输入或录制违法违规、侵犯他人隐私的内容。
     </view>
   </view>
+
+  <view class="card link-card" style="margin-top: 20rpx;" bindtap="goPrivacy">
+    <view style="font-size: 30rpx; color: #B85C38;">查看完整隐私政策 →</view>
+  </view>
 </view>

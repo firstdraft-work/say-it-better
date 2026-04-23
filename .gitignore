@@ -21,3 +21,4 @@ database/dist/
 # Deploy configs (may contain secrets)
 deploy/
 
+.omx/

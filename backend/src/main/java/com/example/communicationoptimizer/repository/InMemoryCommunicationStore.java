@@ -28,7 +28,7 @@ public class InMemoryCommunicationStore implements CommunicationStore {
     private final ConcurrentMap<Long, StoredRecord> records = new ConcurrentHashMap<>();
 
     @Override
-    public OptimizeResponse saveGenerated(String originalText, AnalysisDto analysis, List<VariantDto> variants) {
+    public OptimizeResponse saveGenerated(Long userId, String originalText, AnalysisDto analysis, List<VariantDto> variants) {
         long recordId = recordIdGenerator.incrementAndGet();
 
         StoredRecord storedRecord = new StoredRecord();
@@ -48,7 +48,7 @@ public class InMemoryCommunicationStore implements CommunicationStore {
     }
 
     @Override
-    public List<HistoryItemDto> listHistory() {
+    public List<HistoryItemDto> listHistory(Long userId) {
         return records.values().stream()
                 .sorted(Comparator.comparing((StoredRecord record) -> record.createdAt).reversed())
                 .map(this::toHistoryItem)
@@ -56,7 +56,7 @@ public class InMemoryCommunicationStore implements CommunicationStore {
     }
 
     @Override
-    public CommunicationDetailDto getDetail(Long recordId) {
+    public CommunicationDetailDto getDetail(Long userId, Long recordId) {
         StoredRecord record = getRecord(recordId);
         CommunicationDetailDto detail = new CommunicationDetailDto();
         detail.setRecordId(record.recordId);
@@ -69,14 +69,14 @@ public class InMemoryCommunicationStore implements CommunicationStore {
     }
 
     @Override
-    public HistoryItemDto updateFavorite(Long recordId, boolean favorite) {
+    public HistoryItemDto updateFavorite(Long userId, Long recordId, boolean favorite) {
         StoredRecord record = getRecord(recordId);
         record.favorite = favorite;
         return toHistoryItem(record);
     }
 
     @Override
-    public void delete(Long recordId) {
+    public void delete(Long userId, Long recordId) {
         if (records.remove(recordId) == null) {
             throw new NoSuchElementException("record not found");
         }

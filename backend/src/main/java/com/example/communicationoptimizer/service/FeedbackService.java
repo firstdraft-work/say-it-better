@@ -4,5 +4,5 @@ import com.example.communicationoptimizer.dto.FeedbackRequest;
 
 public interface FeedbackService {
 
-    void submit(FeedbackRequest request);
+    void submit(Long userId, FeedbackRequest request);
 }
