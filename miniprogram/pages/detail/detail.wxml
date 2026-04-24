@@ -8,24 +8,49 @@
 
   <view wx:elif="{{detail}}">
     <view class="card">
-      <view class="text-title">原始输入</view>
-      <view class="text-body mt-md">{{detail.originalText}}</view>
-      <view class="text-meta mt-md">
-        场景：{{detail.analysis.scene}} · 关系：{{detail.analysis.relation}} · 目标：{{detail.analysis.goal}}
+      <view class="detail-title">原始输入</view>
+      <view class="detail-text">{{detail.originalText}}</view>
+
+      <view class="chip-row">
+        <view class="chip">
+          <view class="chip-dot chip-dot-scene"></view>
+          <text>{{detail.analysis.scene}}</text>
+        </view>
+        <view class="chip">
+          <view class="chip-dot chip-dot-relation"></view>
+          <text>{{detail.analysis.relation}}</text>
+        </view>
+        <view class="chip">
+          <view class="chip-dot chip-dot-goal"></view>
+          <text>{{detail.analysis.goal}}</text>
+        </view>
       </view>
-      <view class="text-meta mt-sm">
-        语气标签：{{detail.analysis.toneTagsText}} · 情绪强度：{{detail.analysis.emotionLevel}}/5
+
+      <view class="tone-row" wx:if="{{detail.analysis.toneTagsText}}">
+        <text class="tone-label">语气</text>
+        <text class="tone-text">{{detail.analysis.toneTagsText}}</text>
       </view>
-      <view class="text-meta mt-sm" wx:if="{{detail.analysis.riskPointsText}}">
-        风险点：{{detail.analysis.riskPointsText}}
+
+      <view class="emotion-row">
+        <text class="emotion-label">情绪强度</text>
+        <view class="emotion-dots">
+          <view wx:for="{{5}}" wx:key="*this" class="emotion-dot {{item < detail.analysis.emotionLevel ? 'emotion-dot-filled' : ''}}"></view>
+        </view>
+      </view>
+
+      <view class="risk-row" wx:if="{{detail.analysis.riskPointsText}}">
+        <view class="risk-icon"></view>
+        <text class="risk-text">{{detail.analysis.riskPointsText}}</text>
       </view>
     </view>
 
-    <view class="card variant-{{item.type}}" wx:for="{{detail.variants}}" wx:key="type">
-      <view class="text-section">{{item.title}}</view>
-      <view class="text-body mt-md">{{item.text}}</view>
+    <view class="card variant-card variant-{{item.type}}" wx:for="{{detail.variants}}" wx:key="type">
+      <view class="variant-title">{{item.title}}</view>
+      <view class="variant-text">{{item.text}}</view>
     </view>
 
-    <button class="btn-destructive mt-lg" bindtap="onDelete">删除这条记录</button>
+    <view class="delete-area">
+      <button class="btn-destructive" bindtap="onDelete">删除这条记录</button>
+    </view>
   </view>
 </view>

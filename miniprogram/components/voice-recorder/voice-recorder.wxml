@@ -1,3 +1,8 @@
 <button class="voice-btn {{isRecording ? 'recording' : ''}}" disabled="{{disabled}}" bindtap="onRecordTap">
-  {{isRecording ? '● 录音中...' : '🎤 语音输入'}}
+  <view class="voice-btn-inner">
+    <view class="pulse-ring" wx:if="{{isRecording}}"></view>
+    <view class="pulse-ring pulse-ring-delay" wx:if="{{isRecording}}"></view>
+    <view class="voice-dot" wx:if="{{isRecording}}"></view>
+    <text>{{isRecording ? '录音中，点击停止' : '语音输入'}}</text>
+  </view>
 </button>

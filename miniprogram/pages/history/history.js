@@ -1,10 +1,16 @@
 const api = require("../../services/api");
 const PAGE_SIZE = 20;
 
+const SCENE_LABELS = {
+  workplace: "职场",
+  family: "家庭",
+  social: "社交"
+};
+
 Page({
   data: {
     list: [],
-    filteredList: [],
+    groupedList: [],
     searchKeyword: "",
     activeFilter: "all",
     isLoading: true,
@@ -35,7 +41,7 @@ Page({
       const response = await api.fetchHistory(0, PAGE_SIZE);
       const items = (response.data && response.data.items) || [];
       this.setData({
-        list: items,
+        list: items.map(this.enrichItem),
         hasMore: response.data ? response.data.hasMore : false,
         currentPage: 0,
         isLoading: false
@@ -43,7 +49,7 @@ Page({
         this.applyFilters();
       });
     } catch (error) {
-      this.setData({ list: [], filteredList: [], isLoading: false });
+      this.setData({ list: [], groupedList: [], isLoading: false });
       wx.showToast({ title: getErrorMessage(error), icon: "none", duration: 3000 });
     }
   },
@@ -55,7 +61,7 @@ Page({
       const response = await api.fetchHistory(nextPage, PAGE_SIZE);
       const newItems = (response.data && response.data.items) || [];
       this.setData({
-        list: [...this.data.list, ...newItems],
+        list: [...this.data.list, ...newItems.map(this.enrichItem)],
         hasMore: response.data ? response.data.hasMore : false,
         currentPage: nextPage,
         isLoadingMore: false
@@ -66,6 +72,13 @@ Page({
       this.setData({ isLoadingMore: false });
       wx.showToast({ title: getErrorMessage(error), icon: "none", duration: 3000 });
     }
+  },
+
+  enrichItem(item) {
+    return {
+      ...item,
+      sceneLabel: SCENE_LABELS[item.scene] || item.scene
+    };
   },
 
   onSearchChange(event) {
@@ -101,6 +114,7 @@ Page({
       }, () => {
         this.applyFilters();
       });
+      wx.showToast({ title: favorite ? "已收藏" : "已取消", icon: "none", duration: 1000 });
     } catch (error) {
       wx.showToast({ title: getErrorMessage(error), icon: "none" });
     }
@@ -115,7 +129,34 @@ Page({
       return matchesFavorite && matchesKeyword;
     });
 
-    this.setData({ filteredList });
+    this.setData({ groupedList: this.groupByDate(filteredList) });
+  },
+
+  groupByDate(items) {
+    const groups = {};
+    const today = this.formatDate(new Date());
+    const yesterday = this.formatDate(new Date(Date.now() - 86400000));
+
+    items.forEach((item) => {
+      const date = item.createdAt ? item.createdAt.split(" ")[0] || item.createdAt.split("T")[0] : "未知日期";
+      let displayDate = date;
+      if (date === today) displayDate = "今天";
+      else if (date === yesterday) displayDate = "昨天";
+
+      if (!groups[displayDate]) {
+        groups[displayDate] = { date: displayDate, records: [] };
+      }
+      groups[displayDate].records.push(item);
+    });
+
+    return Object.values(groups);
+  },
+
+  formatDate(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
   }
 });
 

@@ -15,27 +15,53 @@
 <view class="page" wx:elif="{{result}}">
   <view class="card">
     <view class="flex-between">
-      <view class="text-title">识别结果</view>
-      <button size="mini" bindtap="onFavorite">{{isFavorite ? '已收藏' : '收藏'}}</button>
+      <view class="result-title">分析结果</view>
+      <view class="fav-btn {{isFavorite ? 'fav-btn-active' : ''}}" bindtap="onFavorite">
+        <view class="fav-icon"></view>
+        <text>{{isFavorite ? '已收藏' : '收藏'}}</text>
+      </view>
     </view>
-    <view class="text-meta mt-md">
-      场景：{{result.analysis.scene}} · 关系：{{result.analysis.relation}} · 目标：{{result.analysis.goal}}
+
+    <view class="chip-row">
+      <view class="chip">
+        <view class="chip-dot chip-dot-scene"></view>
+        <text>{{result.analysis.scene}}</text>
+      </view>
+      <view class="chip">
+        <view class="chip-dot chip-dot-relation"></view>
+        <text>{{result.analysis.relation}}</text>
+      </view>
+      <view class="chip">
+        <view class="chip-dot chip-dot-goal"></view>
+        <text>{{result.analysis.goal}}</text>
+      </view>
     </view>
-    <view class="text-meta mt-sm">
-      语气标签：{{result.analysis.toneTagsText}} · 情绪强度：{{result.analysis.emotionLevel}}/5
+
+    <view class="tone-row" wx:if="{{result.analysis.toneTagsText}}">
+      <text class="tone-label">语气</text>
+      <text class="tone-text">{{result.analysis.toneTagsText}}</text>
     </view>
-    <view class="text-meta mt-sm" wx:if="{{result.analysis.riskPointsText}}">
-      风险点：{{result.analysis.riskPointsText}}
+
+    <view class="emotion-row">
+      <text class="emotion-label">情绪强度</text>
+      <view class="emotion-dots">
+        <view wx:for="{{5}}" wx:key="*this" class="emotion-dot {{item < result.analysis.emotionLevel ? 'emotion-dot-filled' : ''}}"></view>
+      </view>
+    </view>
+
+    <view class="risk-row" wx:if="{{result.analysis.riskPointsText}}">
+      <view class="risk-icon"></view>
+      <text class="risk-text">{{result.analysis.riskPointsText}}</text>
     </view>
   </view>
 
-  <view class="card variant-{{item.type}}" wx:for="{{result.variants}}" wx:key="type">
-    <view class="text-subtitle">{{item.title}}</view>
-    <view class="text-body mt-md">{{item.text}}</view>
-    <view class="flex-row mt-lg">
-      <button size="mini" data-text="{{item.text}}" data-type="{{item.type}}" bindtap="onCopy">复制</button>
-      <button size="mini" data-text="{{item.text}}" data-type="{{item.type}}" bindtap="onPlay">
-        {{playingVariantType === item.type ? '停止播放' : (ttsLoadingVariantType === item.type ? '生成中...' : '转语音')}}
+  <view class="card variant-card variant-{{item.type}}" wx:for="{{result.variants}}" wx:key="type">
+    <view class="variant-title">{{item.title}}</view>
+    <view class="variant-text">{{item.text}}</view>
+    <view class="variant-actions">
+      <button size="mini" class="action-btn" data-text="{{item.text}}" data-type="{{item.type}}" bindtap="onCopy">复制</button>
+      <button size="mini" class="action-btn" data-text="{{item.text}}" data-type="{{item.type}}" bindtap="onPlay">
+        {{playingVariantType === item.type ? '停止' : (ttsLoadingVariantType === item.type ? '生成中...' : '播放')}}
       </button>
     </view>
   </view>

@@ -1,29 +1,42 @@
 <view class="page">
-  <view class="header-title">Say It Better</view>
-  <view class="header-subtitle">把难开口的话，说得更得体。</view>
+  <view class="header">
+    <view class="header-brand">Say It Better</view>
+    <view class="header-subtitle">把难开口的话，说得更得体</view>
+  </view>
 
-  <view class="card" style="margin-top: 28rpx;">
+  <view class="card">
+    <view class="card-label">你想说什么？</view>
     <textarea
       class="input-area"
-      placeholder="输入你想优化的话，例如：你这周到底能不能把方案给我？"
+      placeholder="例如：你这周到底能不能把方案给我？"
       value="{{inputText}}"
       bindinput="onInputChange"
       maxlength="500"
     />
     <view class="char-count">{{charCount}}/500</view>
 
+    <view class="card-label">选择场景</view>
     <view class="scene-row">
-      <view class="tag {{selectedScene === 'workplace' ? 'scene-active' : ''}}" data-scene="workplace" bindtap="onSelectScene">职场沟通</view>
-      <view class="tag {{selectedScene === 'family' ? 'scene-active' : ''}}" data-scene="family" bindtap="onSelectScene">家庭关系</view>
-      <view class="tag {{selectedScene === 'social' ? 'scene-active' : ''}}" data-scene="social" bindtap="onSelectScene">社交关系</view>
+      <view class="scene-tag {{selectedScene === 'workplace' ? 'scene-active' : ''}}" data-scene="workplace" bindtap="onSelectScene">
+        <view class="scene-icon scene-icon-work"></view>
+        <text>职场沟通</text>
+      </view>
+      <view class="scene-tag {{selectedScene === 'family' ? 'scene-active' : ''}}" data-scene="family" bindtap="onSelectScene">
+        <view class="scene-icon scene-icon-family"></view>
+        <text>家庭关系</text>
+      </view>
+      <view class="scene-tag {{selectedScene === 'social' ? 'scene-active' : ''}}" data-scene="social" bindtap="onSelectScene">
+        <view class="scene-icon scene-icon-social"></view>
+        <text>社交关系</text>
+      </view>
     </view>
 
     <view class="advanced-toggle" bindtap="toggleAdvanced">
       <text>更多选项</text>
-      <text style="margin-left: 8rpx;">{{showAdvanced ? '▴' : '▾'}}</text>
+      <view class="toggle-arrow {{showAdvanced ? 'toggle-arrow-up' : ''}}"></view>
     </view>
 
-    <view wx:if="{{showAdvanced}}">
+    <view class="advanced-panel {{showAdvanced ? 'advanced-panel-open' : ''}}">
       <view class="section-label">关系选择</view>
       <view class="tag-row">
         <view wx:for="{{relationOptions}}" wx:key="value" class="tag {{selectedRelation === item.value ? 'scene-active' : ''}}" data-relation="{{item.value}}" bindtap="onSelectRelation">
@@ -40,7 +53,7 @@
     </view>
   </view>
 
-  <view class="card" style="margin-top: 20rpx;">
+  <view class="action-card">
     <voice-recorder
       disabled="{{isTranscribing || isSubmitting}}"
       bind:recordingchange="onRecordingChange"
@@ -51,7 +64,7 @@
       {{isTranscribing ? '正在转写语音...' : voiceTips}}
     </view>
 
-    <button class="btn-primary" style="margin-top: 24rpx;" loading="{{isSubmitting}}" bindtap="onSubmit">
+    <button class="btn-primary btn-submit" loading="{{isSubmitting}}" disabled="{{isSubmitting}}" bindtap="onSubmit">
       开始优化表达
     </button>
   </view>

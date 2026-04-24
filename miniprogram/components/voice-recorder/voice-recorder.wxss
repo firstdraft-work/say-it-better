@@ -4,8 +4,20 @@
   border: 2rpx solid #b85c38;
   color: #b85c38;
   font-size: 28rpx;
-  padding: 16rpx 40rpx;
+  padding: 0;
   line-height: 1.4;
+  position: relative;
+  overflow: hidden;
+}
+
+.voice-btn-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  padding: 16rpx 40rpx;
+  position: relative;
+  z-index: 1;
 }
 
 .voice-btn.recording {
@@ -16,4 +28,41 @@
 
 .voice-btn[disabled] {
   opacity: 0.5;
+}
+
+/* Recording dot */
+.voice-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: #fff;
+  animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Pulse rings */
+.pulse-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  border-radius: 999rpx;
+  border: 2rpx solid rgba(184, 92, 56, 0.3);
+  animation: pulse-expand 1.5s ease-out infinite;
+  pointer-events: none;
+}
+
+.pulse-ring-delay {
+  animation-delay: 0.5s;
+}
+
+@keyframes pulse-expand {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0; }
 }

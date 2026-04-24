@@ -13,10 +13,10 @@ page {
 /* Card system */
 .card {
   background: rgba(255, 252, 247, 0.92);
-  border-radius: 28rpx;
-  box-shadow: 0 12rpx 36rpx rgba(96, 64, 40, 0.08);
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 32rpx rgba(96, 64, 40, 0.07);
   padding: 28rpx;
-  margin-bottom: 24rpx;
+  margin-bottom: 20rpx;
 }
 
 /* Typography */
@@ -182,13 +182,7 @@ page {
 /* Empty state */
 .empty-state {
   text-align: center;
-  padding: 80rpx 40rpx;
-}
-
-.empty-icon {
-  font-size: 80rpx;
-  color: #d4c8bc;
-  margin-bottom: 24rpx;
+  padding: 60rpx 40rpx;
 }
 
 .empty-text {

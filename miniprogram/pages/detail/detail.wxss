@@ -1,1 +1,157 @@
-/* detail page uses global design system */
+.detail-title {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #2f241f;
+}
+
+.detail-text {
+  margin-top: 12rpx;
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #3d2e25;
+}
+
+/* Reuse chip/tone/emotion/risk styles from result page */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 20rpx;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 20rpx;
+  border-radius: 999rpx;
+  background: #f5ece3;
+  font-size: 24rpx;
+  color: #5a4638;
+}
+
+.chip-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.chip-dot-scene { background: #b85c38; }
+.chip-dot-relation { background: #8fb369; }
+.chip-dot-goal { background: #6b8fb3; }
+
+.tone-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+.tone-label {
+  font-size: 24rpx;
+  color: #9a8575;
+  flex-shrink: 0;
+}
+
+.tone-text {
+  font-size: 24rpx;
+  color: #5a4638;
+}
+
+.emotion-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-top: 16rpx;
+}
+
+.emotion-label {
+  font-size: 24rpx;
+  color: #9a8575;
+  flex-shrink: 0;
+}
+
+.emotion-dots {
+  display: flex;
+  gap: 8rpx;
+}
+
+.emotion-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #e0d5ca;
+  transition: background 0.2s ease;
+}
+
+.emotion-dot-filled {
+  background: #b85c38;
+}
+
+.risk-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10rpx;
+  margin-top: 16rpx;
+  padding: 12rpx 16rpx;
+  border-radius: 12rpx;
+  background: rgba(217, 74, 56, 0.06);
+}
+
+.risk-icon {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  border: 3rpx solid #d94a38;
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 2rpx;
+}
+
+.risk-icon::after {
+  content: '!';
+  position: absolute;
+  top: -2rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16rpx;
+  font-weight: 700;
+  color: #d94a38;
+  line-height: 1;
+}
+
+.risk-text {
+  font-size: 24rpx;
+  color: #8b4a3f;
+  line-height: 1.5;
+}
+
+/* Variant cards */
+.variant-card {
+  position: relative;
+  padding-left: 32rpx;
+}
+
+.variant-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #2f241f;
+}
+
+.variant-text {
+  margin-top: 12rpx;
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #3d2e25;
+}
+
+.variant-polite { border-left: 6rpx solid #8fb369; }
+.variant-direct { border-left: 6rpx solid #b85c38; }
+.variant-professional { border-left: 6rpx solid #6b8fb3; }
+.variant-empathetic { border-left: 6rpx solid #c49b5a; }
+
+.delete-area {
+  margin-top: 40rpx;
+  padding-bottom: 32rpx;
+}
