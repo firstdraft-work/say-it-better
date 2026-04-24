@@ -1,6 +1,7 @@
 package com.example.communicationoptimizer.service;
 
 import com.example.communicationoptimizer.dto.CommunicationDetailDto;
+import com.example.communicationoptimizer.dto.HistoryItemDto;
 import com.example.communicationoptimizer.dto.HistoryPageDto;
 import com.example.communicationoptimizer.dto.OptimizeRequest;
 import com.example.communicationoptimizer.dto.OptimizeResponse;
